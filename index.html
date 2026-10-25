@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>rfstairlifts prototype</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-root="./">
+<a class="skip" href="#main">Skip to the main content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <span class="brand">
+      <span class="tape logo-mark" aria-hidden="true"></span>
+      <span class="brand-name" data-brand>rfstairlifts</span>
+    </span>
+    <span class="small-text muted">Funnel prototype, draft v1</span>
+  </div>
+</header>
+
+<main id="main" class="section" style="padding-top:56px">
+  <div class="wrap stack gap-32" style="max-width:860px">
+    <div class="stack gap-12">
+      <h1 class="display" style="font-size:42px">A working funnel, with nothing live behind it</h1>
+      <p class="lead-copy" style="font-size:20px">Two entry pages feed one six-question quiz. Every answer is scored against the draft lead spec and routed. Leads stay in your browser, so you can try the whole journey and then see what the buyer would receive.</p>
+    </div>
+
+    <div class="stack gap-12">
+      <h2 style="font-size:26px">The visitor's journey</h2>
+      <div class="grid-2" style="gap:16px">
+        <a class="card" href="stairlifts/" style="text-decoration:none;color:inherit"><h3>Google landing page</h3><p>Headline mirrors the search, first quiz question in the hero, click-to-call high on the page.</p></a>
+        <a class="card" href="stairlifts/refused/" style="text-decoration:none;color:inherit"><h3>Meta landing page</h3><p>Shorter and situation-led, with no assumptions about health.</p></a>
+        <a class="card" href="stairlifts/check/" style="text-decoration:none;color:inherit"><h3>The quiz</h3><p>Six questions, postcode with optional photo, then contact details and consent.</p></a>
+        <a class="card" href="stairlifts/thank-you/" style="text-decoration:none;color:inherit"><h3>Thank-you page</h3><p>Where conversion tracking fires. The message changes with where the lead is routed.</p></a>
+      </div>
+    </div>
+
+    <div class="stack gap-12">
+      <h2 style="font-size:26px">The buyer's side</h2>
+      <div class="grid-2" style="gap:16px">
+        <a class="card" href="demo/leads/" style="text-decoration:none;color:inherit"><h3>Lead list</h3><p>Counts by stream, sample leads, CSV export.</p></a>
+        <a class="card" href="demo/lead/" style="text-decoration:none;color:inherit"><h3>Lead sheet</h3><p>One lead as the buyer sees it, with accept and reject. Open one from the list.</p></a>
+      </div>
+    </div>
+
+    <div class="proto-panel">
+      <h2>What is real and what is not</h2>
+      <p>Real: the quiz logic, UK phone and postcode checks, the spam trap, duplicate blocking, click-ID capture, the tier and stream rules, consent logging. Not real: sending leads anywhere, phone numbers, credentials, install photos, survey terms and company details, all of which are marked in yellow brackets until they exist.</p>
+    </div>
+  </div>
+</main>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/core.js"></script>
+</body>
+</html>

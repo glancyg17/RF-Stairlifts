@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Page not found</title>
+<style>
+  body{margin:0;font-family:system-ui,sans-serif;font-size:18px;line-height:1.5;color:#14303B;background:#F4F6F5;display:grid;place-items:center;min-height:100vh;padding:24px}
+  main{max-width:520px} h1{margin:0 0 12px} a{color:#1F6F78;font-weight:700}
+</style>
+</head>
+<body>
+<main>
+  <h1>That page isn't here</h1>
+  <p>Check the address, or <a id="home" href="/">start from the beginning</a>.</p>
+</main>
+<script>
+  // Works on both username.github.io/ and username.github.io/repo-name/
+  var parts = location.pathname.split("/").filter(Boolean);
+  var onProjectSite = location.hostname.endsWith("github.io") && parts.length > 0;
+  document.getElementById("home").href = onProjectSite ? "/" + parts[0] + "/" : "/";
+</script>
+</body>
+</html>
