@@ -11,17 +11,6 @@
 <body data-variant="google" data-root="../">
 <a class="skip" href="#main">Skip to the main content</a>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <symbol id="s-straight" viewBox="0 0 64 64"><rect x="22" y="6" width="20" height="52" rx="1"/><path d="M22 14h20M22 22h20M22 30h20M22 38h20M22 46h20"/></symbol>
-    <symbol id="s-oneturn" viewBox="0 0 64 64"><path d="M8 58V6h50v20H28v32z"/><path d="M8 26h20M8 34h20M8 42h20M8 50h20M36 6v20M44 6v20M52 6v20"/></symbol>
-    <symbol id="s-winders" viewBox="0 0 64 64"><path d="M8 58V6h50v20H28v32z"/><path d="M28 26L8 26M28 26L8 14M28 26L19 6M28 26V6M8 34h20M8 42h20M8 50h20"/></symbol>
-    <symbol id="s-spiral" viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"/><circle cx="32" cy="32" r="6"/><path d="M38 32h18M36.2 36.2L49 49M32 38v18M27.8 36.2L15 49M26 32H8M27.8 27.8L15 15M32 26V8M36.2 27.8L49 15"/></symbol>
-    <symbol id="s-unsure" viewBox="0 0 64 64"><rect x="8" y="8" width="48" height="48" rx="8" stroke-dasharray="5 5"/><text x="32" y="43" text-anchor="middle" font-size="30" font-family="Atkinson Hyperlegible, sans-serif" fill="#1F6F78" stroke="none">?</text></symbol>
-    <symbol id="i-tick" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
-  </defs>
-</svg>
-
 <header class="site-header">
   <div class="wrap">
     <a class="brand" href="./">
@@ -42,9 +31,9 @@
         <h1 class="display">Stairlift for awkward stairs? Find out if yours can be fitted.</h1>
         <p class="sub">Winding steps, narrow or steep stairs, short at the top, or told by another firm that it can't be done. Answer a few questions about your stairs and we'll tell you what's realistic.</p>
         <ul class="ticks">
-          <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-tick"/></svg><span>Free to check, no obligation</span></li>
-          <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-tick"/></svg><span>About two minutes on your phone</span></li>
-          <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#i-tick"/></svg><span>An honest answer, including when a stairlift won't work</span></li>
+          <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span>Free to check, no obligation</span></li>
+          <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span>About two minutes on your phone</span></li>
+          <li><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span>An honest answer, including when a stairlift won't work</span></li>
         </ul>
       </div>
 
@@ -53,12 +42,10 @@
         <div class="inner">
           <div class="small-text muted">Question 1 of 6</div>
           <h2 id="q1">What shape are your stairs?</h2>
-          <div class="tiles">
-            <a class="tile" href="check/?shape=straight"><svg width="52" height="52" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#s-straight"/></svg><span>Straight, no turns</span></a>
-            <a class="tile" href="check/?shape=oneTurn"><svg width="52" height="52" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#s-oneturn"/></svg><span>One turn with a landing</span></a>
-            <a class="tile" href="check/?shape=winders"><svg width="52" height="52" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#s-winders"/></svg><span>Steps that fan round a corner</span></a>
-            <a class="tile" href="check/?shape=spiral"><svg width="52" height="52" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#s-spiral"/></svg><span>Spiral or tightly curving</span></a>
-            <a class="tile wide dashed" href="check/?shape=unsure"><svg width="52" height="52" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><use href="#s-unsure"/></svg><span>Not sure, or something different</span></a>
+          <div class="tiles one">
+            <a class="tile" href="check/?shape=straight"><svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><rect x="22" y="6" width="20" height="52" rx="1"/><path d="M22 14h20M22 22h20M22 30h20M22 38h20M22 46h20"/></svg><span>Straight, no turns</span></a>
+            <a class="tile" href="check/?shape=turn"><svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M22.0 58.0L58.0 58.0A50 50 0 0 0 8.0 8.0L8.0 44.0A14 14 0 0 1 22.0 58.0z"/><path d="M21.5 54.4L56.3 45.1M20.1 51.0L51.3 33.0M17.9 48.1L43.4 22.6M15.0 45.9L33.0 14.7M11.6 44.5L20.9 9.7"/></svg><span>A turn or a curve</span></a>
+            <a class="tile" href="check/?shape=different"><svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><rect x="8" y="8" width="48" height="48" rx="8" stroke-dasharray="5 5"/><text x="32" y="43" text-anchor="middle" font-size="30" font-family="Atkinson Hyperlegible, sans-serif" fill="#1F6F78" stroke="none">?</text></svg><span>Something different</span></a>
           </div>
           <div class="small-text muted">We only ask for your contact details at the very end.</div>
         </div>
@@ -68,9 +55,18 @@
 
   <section class="trust" aria-label="About the installer">
     <div class="wrap">
-      <div><div><strong class="ph">[Installer credentials, e.g. trade body]</strong></div><div class="note">Confirm with your installer before publishing</div></div>
-      <div><div><strong class="ph">[Years installing stairlifts]</strong></div><div class="note">Use the real figure</div></div>
-      <div><div><strong class="ph">[Number of awkward-stairs installs]</strong></div><div class="note">Use the real figure, not a guess</div></div>
+      <div>
+        <div><strong>Which? Trusted Trader</strong></div>
+        <div class="note"><span data-installer>Senior Stairlifts</span> is endorsed by Which?, rated <span data-which-rating>4.9</span> out of 5 from <span data-which-count>144</span> customer reviews (checked <span data-which-date>25 October 2026</span>). <a data-which-link href="https://trustedtraders.which.co.uk/businesses/senior-stairlifts-ltd/" target="_blank" rel="noopener noreferrer">See their Which? listing<span class="sr-only"> (opens in a new tab)</span></a></div>
+      </div>
+      <div>
+        <div><strong>A registered UK company</strong></div>
+        <div class="note"><span data-installer-legal>Senior Stairlifts Ltd</span>, <span data-installer-town>Leeds</span>. Company number <span data-installer-number>11872519</span>. Established 2019.</div>
+      </div>
+      <div>
+        <div><strong class="ph">[Number of awkward-stairs installs]</strong></div>
+        <div class="note">Use the real figure, not a guess</div>
+      </div>
     </div>
   </section>
 
@@ -97,8 +93,8 @@
       <h2 class="title">How it works</h2>
       <ol class="steps">
         <li><span class="n" aria-hidden="true">1</span><span class="t">Tell us about your stairs</span><p>Six short questions. A photo helps but isn't required.</p></li>
-        <li><span class="n" aria-hidden="true">2</span><span class="t">We pass you to one installer</span><p>One specialist who covers your area and handles difficult stairs, not a list of companies.</p></li>
-        <li><span class="n" aria-hidden="true">3</span><span class="t">They call and arrange a survey</span><p><span class="ph">[Survey terms: free or paid, how soon]</span>. They measure properly and tell you what can be done.</p></li>
+        <li><span class="n" aria-hidden="true">2</span><span class="t">We pass you to one installer</span><p>One specialist who covers your area and handles difficult stairs, not a list of companies. To begin with, that is <span data-installer>Senior Stairlifts</span>.</p></li>
+        <li><span class="n" aria-hidden="true">3</span><span class="t">They call and arrange a survey</span><p>A local engineer measures your stairs properly and gives you a free, no-obligation quote.</p></li>
       </ol>
     </div>
   </section>
@@ -107,13 +103,14 @@
     <div class="wrap stack gap-32">
       <div class="measure stack gap-12">
         <h2 class="title">Real installs on difficult stairs</h2>
-        <p class="lead-copy">Use genuine photos and short write-ups from your installer partner. Real specifics build more trust than any claim.</p>
+        <p class="lead-copy">Photos and notes from jobs fitted by <span data-installer>Senior Stairlifts</span>, the installer your details go to.</p>
       </div>
       <div class="grid-3">
-        <figure class="stack gap-12" style="margin:0"><div class="photo-ph">[Photo: winders at the top]</div><figcaption class="lead-copy"><span class="ph">[Area, month. What made it difficult and what was fitted]</span></figcaption></figure>
-        <figure class="stack gap-12" style="margin:0"><div class="photo-ph">[Photo: narrow Victorian stairs]</div><figcaption class="lead-copy"><span class="ph">[Area, month. What made it difficult and what was fitted]</span></figcaption></figure>
-        <figure class="stack gap-12" style="margin:0"><div class="photo-ph">[Photo: previously refused job]</div><figcaption class="lead-copy"><span class="ph">[Area, month. Who had said no, and what changed]</span></figcaption></figure>
+        <figure class="stack gap-12" style="margin:0"><div class="photo-ph shot"><span>[Photo: spiral staircase]</span><img src="https://seniorstairlifts.co.uk/wp-content/uploads/2025/12/Project-of-the-year-2.jpg" alt="A custom curved stairlift rail fitted to a spiral staircase" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()"></div><figcaption class="lead-copy">A spiral staircase that several other firms had turned down. A custom-made curved rail was built to follow every turn. <span class="ph">[Area, month]</span></figcaption></figure>
+        <figure class="stack gap-12" style="margin:0"><div class="photo-ph shot"><span>[Photo: curved stairlift]</span><img src="https://seniorstairlifts.co.uk/wp-content/uploads/2025/10/20250624_153012-2-1920x1440.jpg" alt="A curved stairlift fitted to a spiral staircase" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()"></div><figcaption class="lead-copy">A curved stairlift on a spiral staircase. <span class="ph">[Area, month. What made it difficult]</span></figcaption></figure>
+        <figure class="stack gap-12" style="margin:0"><div class="photo-ph">[Photo: narrow stairs]</div><figcaption class="lead-copy"><span class="ph">[Area, month. What made it difficult and what was fitted]</span></figcaption></figure>
       </div>
+      <p class="small-text muted">Photos: <span data-installer-legal>Senior Stairlifts Ltd</span>.</p>
     </div>
   </section>
 
@@ -131,10 +128,12 @@
     <div class="wrap stack gap-32">
       <h2 class="title">Questions people ask</h2>
       <dl class="faq grid-2" style="margin:0">
-        <div><dt>Will you pass my details to lots of companies?</dt><dd>No. Your details go to one installer who covers your area. They'll contact you by phone or text about your enquiry, and you can ask them to stop at any time.</dd></div>
-        <div><dt>Does it cost anything to check?</dt><dd>The check is free. The installer will explain survey and pricing when they call. <span class="ph">[Confirm survey terms]</span></dd></div>
+        <div><dt>Will you pass my details to lots of companies?</dt><dd>No. Your details go to one installer who covers your area, and nobody else. To begin with, that is <span data-installer>Senior Stairlifts</span>. They'll contact you by phone or text about your enquiry, and you can ask them to stop at any time.</dd></div>
+        <div><dt>Does it cost anything to check?</dt><dd>The check is free. <span data-installer>Senior Stairlifts</span> say their survey is free and comes with no obligation. <span class="ph">[Confirm this applies to enquiries from us]</span></dd></div>
         <div><dt>What if a stairlift can't be fitted?</dt><dd>We'll tell you plainly, and point to alternatives such as <span class="ph">[through-floor lifts, if your installer offers them]</span>.</dd></div>
         <div><dt>How soon will someone ring?</dt><dd><span class="ph">[Agreed response time]</span>. Please pick up if you see an unfamiliar number. It's likely to be your installer.</dd></div>
+        <div><dt>How long does a curved stairlift take?</dt><dd>The rail is made to measure for your stairs, so it can take a few weeks to arrive. Fitting usually takes a few hours; <span data-installer>Senior Stairlifts</span> say 4 to 5 on average for curved stairs. They'll give you a realistic timescale after the survey.</dd></div>
+        <div><dt>Who is the installer, and who are you?</dt><dd>The installer is <span data-installer-legal>Senior Stairlifts Ltd</span> of <span data-installer-town>Leeds</span>, endorsed by Which? Trusted Traders. We are an introduction service, not an installer, and we are paid by the installer for each enquiry we pass on.</dd></div>
       </dl>
     </div>
   </section>
@@ -153,7 +152,7 @@
 <footer class="site-footer">
   <div class="wrap">
     <div><span data-brand>rfstairlifts</span> is a trading name of <span class="ph">[Company name]</span>, registered in England and Wales no. <span class="ph">[NUMBER]</span>. ICO registration <span class="ph">[NUMBER]</span>. <span class="ph">[Registered address]</span>.</div>
-    <div>We are an independent advice and introduction service. We are not an installer, and we are not part of the NHS, a council or a charity. We pass your enquiry to one installer in your area.</div>
+    <div>We are an introduction service. We are not an installer, and we are not part of the NHS, a council or a charity. We pass your enquiry to one installer in your area, currently <span data-installer-legal>Senior Stairlifts Ltd</span> (company number <span data-installer-number>11872519</span>), and we are paid by that installer for each enquiry we pass on.</div>
     <div class="links"><span class="ph">[Privacy policy]</span><span class="ph">[Cookie policy]</span><span class="ph">[Terms]</span><span class="ph">[Complaints]</span></div>
   </div>
 </footer>

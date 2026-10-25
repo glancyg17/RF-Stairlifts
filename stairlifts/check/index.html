@@ -9,16 +9,6 @@
 </head>
 <body class="quiz-page" data-root="../../">
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <symbol id="s-straight" viewBox="0 0 64 64"><rect x="22" y="6" width="20" height="52" rx="1"/><path d="M22 14h20M22 22h20M22 30h20M22 38h20M22 46h20"/></symbol>
-    <symbol id="s-oneturn" viewBox="0 0 64 64"><path d="M8 58V6h50v20H28v32z"/><path d="M8 26h20M8 34h20M8 42h20M8 50h20M36 6v20M44 6v20M52 6v20"/></symbol>
-    <symbol id="s-winders" viewBox="0 0 64 64"><path d="M8 58V6h50v20H28v32z"/><path d="M28 26L8 26M28 26L8 14M28 26L19 6M28 26V6M8 34h20M8 42h20M8 50h20"/></symbol>
-    <symbol id="s-spiral" viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"/><circle cx="32" cy="32" r="6"/><path d="M38 32h18M36.2 36.2L49 49M32 38v18M27.8 36.2L15 49M26 32H8M27.8 27.8L15 15M32 26V8M36.2 27.8L49 15"/></symbol>
-    <symbol id="s-unsure" viewBox="0 0 64 64"><rect x="8" y="8" width="48" height="48" rx="8" stroke-dasharray="5 5"/><text x="32" y="43" text-anchor="middle" font-size="30" font-family="Atkinson Hyperlegible, sans-serif" fill="#1F6F78" stroke="none">?</text></symbol>
-  </defs>
-</svg>
-
 <header class="quiz-top">
   <div class="wrap">
     <a class="brand" href="../" aria-label="Back to the start">
@@ -36,38 +26,34 @@
     <!-- 1: shape -->
     <section class="q-step" data-step="1" aria-labelledby="h1">
       <h1 id="h1" tabindex="-1">What shape are your stairs?</h1>
-      <p class="small-text muted" id="d1">Pick the closest. A rough idea is fine.</p>
+      <p class="small-text muted" id="d1">Pick the closest. If you're not sure, choose "Something different".</p>
       <fieldset aria-describedby="d1">
         <legend class="sr-only">Stair shape</legend>
-        <div class="tiles">
-          <label class="choice tile-face"><input type="radio" name="shape" value="straight"><span class="face"><svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><use href="#s-straight"/></svg><span>Straight, no turns</span></span></label>
-          <label class="choice tile-face"><input type="radio" name="shape" value="oneTurn"><span class="face"><svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><use href="#s-oneturn"/></svg><span>One turn with a landing</span></span></label>
-          <label class="choice tile-face"><input type="radio" name="shape" value="winders"><span class="face"><svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><use href="#s-winders"/></svg><span>Steps that fan round a corner</span></span></label>
-          <label class="choice tile-face"><input type="radio" name="shape" value="spiral"><span class="face"><svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><use href="#s-spiral"/></svg><span>Spiral or tightly curving</span></span></label>
-          <label class="choice tile-face" style="grid-column:span 2"><input type="radio" name="shape" value="unsure"><span class="face"><svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><use href="#s-unsure"/></svg><span>Not sure, or something different</span></span></label>
+        <div class="tiles one">
+          <label class="choice tile-face"><input type="radio" name="shape" value="straight"><span class="face"><svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><rect x="22" y="6" width="20" height="52" rx="1"/><path d="M22 14h20M22 22h20M22 30h20M22 38h20M22 46h20"/></svg><span>Straight, no turns</span></span></label>
+          <label class="choice tile-face"><input type="radio" name="shape" value="turn"><span class="face"><svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><path d="M22.0 58.0L58.0 58.0A50 50 0 0 0 8.0 8.0L8.0 44.0A14 14 0 0 1 22.0 58.0z"/><path d="M21.5 54.4L56.3 45.1M20.1 51.0L51.3 33.0M17.9 48.1L43.4 22.6M15.0 45.9L33.0 14.7M11.6 44.5L20.9 9.7"/></svg><span>A turn or a curve</span></span></label>
+          <label class="choice tile-face"><input type="radio" name="shape" value="different"><span class="face"><svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><rect x="8" y="8" width="48" height="48" rx="8" stroke-dasharray="5 5"/><text x="32" y="43" text-anchor="middle" font-size="30" font-family="Atkinson Hyperlegible, sans-serif" fill="#1F6F78" stroke="none">?</text></svg><span>Something different</span></span></label>
         </div>
       </fieldset>
       <div class="error" data-err="1" role="alert"></div>
     </section>
 
-    <!-- 2: difficulty -->
+    <!-- 2: what makes the stairs hard to climb (optional, tick any) -->
     <section class="q-step" data-step="2" aria-labelledby="h2" hidden>
-      <h1 id="h2" tabindex="-1">What makes your stairs difficult?</h1>
-      <p class="small-text muted" id="d2">Pick the main one. You can add detail with the installer later.</p>
+      <h1 id="h2" tabindex="-1">What makes the stairs hard to climb?</h1>
+      <p class="small-text muted" id="d2">Tick any that apply. You can skip this if you'd rather not say.</p>
       <fieldset aria-describedby="d2">
-        <legend class="sr-only">Main difficulty</legend>
+        <legend class="sr-only">What makes the stairs hard to climb</legend>
         <div class="options">
-          <label class="choice"><input type="radio" name="difficulty" value="narrow"><span class="face"><span class="dot"></span><span>The stairs are narrow</span></span></label>
-          <label class="choice"><input type="radio" name="difficulty" value="steep"><span class="face"><span class="dot"></span><span>The stairs are steep</span></span></label>
-          <label class="choice"><input type="radio" name="difficulty" value="winders"><span class="face"><span class="dot"></span><span>Winding or fan-shaped steps</span></span></label>
-          <label class="choice"><input type="radio" name="difficulty" value="short"><span class="face"><span class="dot"></span><span>They stop short at the top or bottom</span></span></label>
-          <label class="choice"><input type="radio" name="difficulty" value="door"><span class="face"><span class="dot"></span><span>A door opens onto the stairs</span></span></label>
-          <label class="choice"><input type="radio" name="difficulty" value="weight"><span class="face"><span class="dot"></span><span>Weight or size of the person</span></span></label>
-          <label class="choice"><input type="radio" name="difficulty" value="none"><span class="face"><span class="dot"></span><span>No difficulty, a regular stairlift</span></span></label>
-          <label class="choice"><input type="radio" name="difficulty" value="other"><span class="face"><span class="dot"></span><span>Something else</span></span></label>
+          <label class="choice"><input type="checkbox" name="climbing" value="pain"><span class="face"><span class="box" aria-hidden="true"></span><span>Painful knees, hips or legs</span></span></label>
+          <label class="choice"><input type="checkbox" name="climbing" value="tired"><span class="face"><span class="box" aria-hidden="true"></span><span>Tiredness or breathlessness</span></span></label>
+          <label class="choice"><input type="checkbox" name="climbing" value="unsteady"><span class="face"><span class="box" aria-hidden="true"></span><span>Unsteadiness, or fear of falling</span></span></label>
+          <label class="choice"><input type="checkbox" name="climbing" value="fall"><span class="face"><span class="box" aria-hidden="true"></span><span>A recent fall</span></span></label>
+          <label class="choice"><input type="checkbox" name="climbing" value="aid"><span class="face"><span class="box" aria-hidden="true"></span><span>Using a stick, frame or wheelchair</span></span></label>
+          <label class="choice"><input type="checkbox" name="climbing" value="cantmanage"><span class="face"><span class="box" aria-hidden="true"></span><span>Can't manage the stairs now</span></span></label>
+          <label class="choice"><input type="checkbox" name="climbing" value="other"><span class="face"><span class="box" aria-hidden="true"></span><span>Something else</span></span></label>
         </div>
       </fieldset>
-      <div class="error" data-err="2" role="alert"></div>
     </section>
 
     <!-- 3: earlier refusal -->

@@ -40,20 +40,36 @@ The site follows the one-authority-site decision: each future product gets its o
 - Spam trap (hidden field; a filled one looks like success but stores nothing).
 - Duplicate blocking by phone number (this browser only; a real version needs a server).
 - Click-ID and UTM capture (`gclid`, `gbraid`, `wbraid`, `fbclid`, `utm_*`) carried from the landing page into each lead.
-- Tiering from the codex: four tests (stairs, area, timing, evidence), Tier A = 4, B = 3, C = fewer, Standard kept separate. Routing: premium (A/B in area), Tier C stream, Standard stream, waiting list (out of area).
+- Tiering from the codex: four tests (stairs, area, timing, evidence), Tier A = 4, B = 3, C = fewer. The **stairs test passes if a company has already turned them down, or the stairs are not straight** (a turn or curve, or "Something different"). **Standard** means straight stairs that nobody has turned down, and is kept as a separate stream. Routing: premium (A/B in area), Tier C stream, Standard stream, waiting list (out of area).
+- "What makes the stairs hard to climb" is optional, tick-any, and is **context for the installer only**: it does not change the tier. It is about the person (knees, breathlessness, balance, a fall, a mobility aid), not about the installation.
 - Consent logging: each lead stores the consent wording, version and time.
 - Optional photo, shrunk on the device to a small JPEG.
 - The SMS code screen from the canvas is gone, as decided.
 
+## Installer facts and where they came from
+
+The trust content now uses real, checkable facts about the installer, **Senior Stairlifts Ltd**, read from public pages on **25 October 2026**. They live in `config.js` under `installer`, and every page picks them up from there.
+
+| Used on the site | Source |
+| --- | --- |
+| Endorsed by Which? as a Trusted Trader, rated 4.9 from 144 reviews, with a link to the listing | The trader's page at trustedtraders.which.co.uk |
+| Senior Stairlifts Ltd, Leeds, company number 11872519, established 2019 | Companies House record (directors appointed March 2019) and the company's own About page |
+| Two job photos: a spiral staircase several firms turned down, and a curved stairlift on a spiral staircase | The installer's own curved-stairlifts page, linked directly from their site |
+| Survey is free and no-obligation; curved rails take a few weeks, fitting 4 to 5 hours on average | The installer's own curved-stairlift pages, stated as theirs |
+
+**Deliberately not used yet**, because they are only the installer's own claims or I could not confirm them: "Which? Trusted Trader Project of the Year 2025", "all engineers DBS-checked", the Trustmark badge, "1,000+ reviews", Handicare Gold Dealer, and any warranty promise (free 2 years, extendable to 5, extension price unpublished). The list is in `config.js` so it is not forgotten. Customer testimonials are not copied: they belong to the reviewers, so the pages link to the Which? listing instead.
+
+**No Which? logo is used.** Which? grants logo use to the endorsed trader only, for the duration of their endorsement, and lists businesses it believes are falsely claiming endorsement. A different brand showing the badge could look like exactly that. The pages state the endorsement in words, as the installer's, with a link. Ask Which? (or the installer) in writing before ever adding the badge.
+
 ## What is placeholder
 
-Anything in yellow brackets: phone number, hours, installer name and credentials, survey terms, install photos, company and ICO details, privacy and cookie pages, funding guide link. Coverage is set to the Central Belt (`G, ML, PA, KA, FK, EH, KY`) purely as a test region: replace it with the friend's real coverage in `config.js`.
+Anything in yellow brackets: our own phone number and hours, our company and ICO details, privacy and cookie pages, the funding guide link, the number of awkward-stairs installs, the third photo, and "[Area, month]" on each job. Coverage is still set to the Central Belt (`G, ML, PA, KA, FK, EH, KY`) as a test region: the installer's site says England, Scotland and Wales, so widen it once your friend confirms the real coverage.
 
 ## Try it
 
 1. Open `/stairlifts/`, pick a shape, finish the quiz.
 2. Read the thank-you page, then follow the prototype panel to the buyer's lead sheet.
-3. Try a postcode outside coverage (for example M1 1AE) to see the waiting-list outcome, and "No difficulty, first enquiry" to see Standard.
+3. Try a postcode outside coverage (for example M1 1AE) to see the waiting-list outcome, and "Straight, no turns" with "No, this is my first enquiry" to see Standard.
 4. Open `/demo/leads/` and press **Add sample leads** to see every tier at once.
 5. Test attribution: add `?gclid=test&utm_term=refused%20stairlift` to the Google page URL, then complete the quiz.
 
@@ -81,8 +97,13 @@ Things to know:
 - [ ] Remove the prototype banner (`prototypeBanner: false`), `noindex` meta tags and `robots.txt` when you are ready to be found.
 - [ ] Move duplicate blocking and tiering server-side (or into whatever receives the leads) so they cannot be bypassed. Email works to start; a proper lead store gives you retries, de-duplication across devices and a record of what each buyer was sent.
 - [ ] Privacy notice (naming FormSubmit and your email provider as processors), cookie consent (gate Google Ads and Meta tags on it) and ICO registration. Have the consent wording and buyer terms reviewed by a solicitor or data protection adviser.
+- [ ] **Health information.** The "hard to climb" answers (falls, breathlessness, mobility aids) are health data, which UK GDPR treats as special category data needing explicit consent. The consent wording (v2-draft) now says so, and the question is optional, but have it reviewed. When someone fills this in for a parent, they are giving another person's health details, which is worth specific advice.
 - [ ] Confirm the retention period for leads outside any buyer's area (the thank-you page says "limited time").
-- [ ] Real trust content: credentials, install photos, response times. Delete any claim you cannot back up.
+- [ ] **Get written permission from Senior Stairlifts** to use their name, credentials, photos and job stories on another brand's site, and to hold the 4.9 / 144 figure here. Photos are hotlinked from their server for now: download them with permission and host copies in `assets/`, because hotlinking can break, uses their bandwidth and tells their server about each visitor. Check the engineers in the photos are happy to appear.
+- [ ] Re-check the Which? rating and review count before launch and before any ad runs: an out-of-date figure is a problem. Update `rating`, `reviews` and `checkedOn` in `config.js`.
+- [ ] Confirm with the installer that their free survey and timings apply to enquiries from us, then remove the yellow "[Confirm...]" notes.
+- [ ] Real trust content still missing: install counts, our response times. Delete any claim you cannot back up.
+- [ ] Review how we describe ourselves. The pages say "an introduction service" and disclose that the installer pays us per enquiry, and no longer say "independent": with one paid installer showing its credentials, "independent" would be hard to defend under advertising rules.
 - [ ] Clear the brand name, then change `brand` in `config.js` and the page titles.
 - [ ] Wire conversion tracking to the `generate_lead` event on the thank-you page, and send the buyer's sales outcomes back so ads optimise towards real customers.
 

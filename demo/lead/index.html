@@ -58,7 +58,6 @@
 
   html += '<section class="sheet-card" aria-labelledby="c2"><h2 id="c2">The stairs</h2>' +
     kv("Shape", esc(L.shape[a.shape] || a.shape)) +
-    kv("Main difficulty", esc(L.difficulty[a.difficulty] || a.difficulty)) +
     kv("Already turned down?", esc(L.refused[a.refused] || a.refused)) +
     kv("Reason given, in their words", a.refusedReason ? esc(a.refusedReason) : '<span class="muted">None given</span>') +
     '<div class="kv"><div class="k">Photo</div><div class="v">' +
@@ -67,7 +66,8 @@
 
   html += '<section class="sheet-card" aria-labelledby="c3"><h2 id="c3">Who and when</h2>' +
     kv("Stairlift is for", esc(L.who[a.who] || a.who)) +
-    kv("Needed", esc(L.when[a.when] || a.when)) + '</section>';
+    kv("Needed", esc(L.when[a.when] || a.when)) +
+    kv("What makes the stairs hard to climb", (a.climbing && a.climbing.length) ? a.climbing.map(function (k) { return esc(L.climbing[k] || k); }).join("<br>") : '<span class="muted">Not given</span>') + '</section>';
 
   html += '<section class="sheet-card" aria-labelledby="c4"><h2 id="c4">Location</h2>' +
     kv("Postcode", esc(a.postcode)) +
@@ -88,8 +88,8 @@
 
   html += '<section class="callout" aria-labelledby="why"><div class="t" id="why">Why this is ' + (s.tier === "Standard" ? "Standard" : "Tier " + esc(s.tier)) +
     ' <span class="small-text muted" style="font-weight:400">(draft rules to agree with your buyer)</span></div>' +
-    '<div class="tests">' + test(s.tests.stairs, "Turned down or complex stairs") + test(s.tests.area, "In your area") + test(s.tests.timing, "Needed within 3 months") + test(s.tests.evidence, "Photo or reason supplied") + '</div>' +
-    '<div class="small-text muted" style="margin-top:10px">Tier B meets three of these. Tier C is fewer, or someone just exploring. Regular stairlift enquiries with no difficulty are tagged Standard and kept in a separate stream.</div></section>';
+    '<div class="tests">' + test(s.tests.stairs, "Turned down, or stairs that are not straight") + test(s.tests.area, "In your area") + test(s.tests.timing, "Needed within 3 months") + test(s.tests.evidence, "Photo or reason supplied") + '</div>' +
+    '<div class="small-text muted" style="margin-top:10px">Tier B meets three of these. Tier C is fewer, or someone just exploring. Straight stairs that no company has turned down are tagged Standard and kept in a separate stream. What makes the stairs hard to climb is context for your call and does not change the tier.</div></section>';
 
   html += '<section class="stack gap-12" aria-labelledby="act"><h2 id="act" class="sr-only">Decision</h2><div id="actions"></div>' +
     '<div class="small-text muted">Agree the rejection reasons and the time limit for using them in writing.</div></section>';

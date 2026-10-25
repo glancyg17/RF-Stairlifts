@@ -28,19 +28,17 @@
   RF.LABELS = {
     shape: {
       straight: "Straight, no turns",
-      oneTurn: "One turn with a landing",
-      winders: "Steps that fan round a corner",
-      spiral: "Spiral or tightly curving",
-      unsure: "Not sure, or something different"
+      turn: "A turn or a curve",
+      different: "Something different"
     },
-    difficulty: {
-      narrow: "The stairs are narrow",
-      steep: "The stairs are steep",
-      winders: "Winding or fan-shaped steps",
-      short: "They stop short at the top or bottom",
-      door: "A door opens onto the stairs",
-      weight: "Weight or size of the person",
-      none: "No difficulty, a regular stairlift",
+    /* What makes the stairs hard to CLIMB (about the person, not the installation). Optional, tick any. */
+    climbing: {
+      pain: "Painful knees, hips or legs",
+      tired: "Tiredness or breathlessness",
+      unsteady: "Unsteadiness, or fear of falling",
+      fall: "A recent fall",
+      aid: "Using a stick, frame or wheelchair",
+      cantmanage: "Can't manage the stairs now",
       other: "Something else"
     },
     refused: {
@@ -79,6 +77,12 @@
     return attr;
   };
 
+  /* ---------- Consent wording (filled from config) ---------- */
+  RF.consentText = function () {
+    var buyer = (C.installer && C.installer.legalName) || C.buyer.name;
+    return C.consentText.replace(/\{brand\}/g, C.brand).replace(/\{buyer\}/g, buyer);
+  };
+
   /* ---------- Validation ---------- */
   /* UK phone: accepts +44 / 0044 / 0 prefixes, spaces and dashes. Geographic (01/02/03) and mobile (07). */
   RF.validatePhone = function (raw) {
@@ -109,16 +113,19 @@
   /* ---------- Scoring and routing (draft spec from the Project Codex) ----------
      Four tests: stairs, area, timing, evidence of intent.
      Tier A = all four, Tier B = three, Tier C = fewer.
-     Standard = regular stairlift, no difficulty, never refused: a separate stream, never premium.
+     "Stairs" passes if a company has turned them down, or the stairs are not straight
+     (a turn or curve, or "something different"). What makes the stairs hard to CLIMB is
+     context for the installer and does not change the tier.
+     Standard = straight stairs, never turned down: a separate stream, never premium.
      Streams: premium (A/B in area), standard, tierC, waiting (out of area). */
   RF.score = function (a, hasPhoto, area) {
-    var complex = a.difficulty && a.difficulty !== "none";
+    var notStraight = a.shape === "turn" || a.shape === "different";
     var refused = a.refused === "yes" || a.refused === "maybe";
     var reason = !!(a.refusedReason && a.refusedReason.trim().length >= 3);
-    var isStandard = a.difficulty === "none" && a.refused === "no";
+    var isStandard = a.shape === "straight" && a.refused === "no";
 
     var tests = {
-      stairs: refused || complex,
+      stairs: refused || notStraight,
       area: RF.inCoverage(area),
       timing: a.when === "month" || a.when === "three",
       evidence: hasPhoto || reason
@@ -169,7 +176,7 @@
       variant: (attr && attr.landing_variant) || "direct",
       attribution: attr || {},
       answers: {
-        shape: a.shape, difficulty: a.difficulty, refused: a.refused,
+        shape: a.shape, climbing: a.climbing || [], refused: a.refused,
         refusedReason: (a.refusedReason || "").trim(), who: a.who, when: a.when,
         postcode: pc.normalised, postcodeArea: pc.area, slot: a.slot || ""
       },
@@ -180,7 +187,7 @@
       },
       consent: {
         given: true, at: new Date().toISOString(), version: C.consentVersion,
-        text: C.consentText.replace(/\{brand\}/g, C.brand)
+        text: RF.consentText()
       },
       scoring: score,
       flags: { spamTrap: !!honeypotTripped },
@@ -202,7 +209,7 @@
     f["Best time to call"] = a.slot ? L.slot[a.slot] : "Any time";
     f["Postcode"] = a.postcode + (t.area ? " (inside coverage)" : " (OUTSIDE coverage)");
     f["Stair shape"] = L.shape[a.shape] || a.shape;
-    f["Main difficulty"] = L.difficulty[a.difficulty] || a.difficulty;
+    f["Hard to climb because"] = (a.climbing && a.climbing.length) ? a.climbing.map(function (k) { return L.climbing[k] || k; }).join(", ") : "Not given";
     f["Already turned down?"] = L.refused[a.refused] || a.refused;
     f["Reason given"] = a.refusedReason || "None given";
     f["Stairlift is for"] = L.who[a.who] || a.who;
@@ -308,12 +315,12 @@
   RF.sampleLeads = function () {
     var now = Date.now();
     var base = [
-      { shape: "winders", difficulty: "winders", refused: "yes", refusedReason: "Said the winders were too tight for their rail", who: "parent", when: "three", postcode: "G12 8QQ", slot: "pm", photo: true, name: "Margaret", phone: "07700 900111", utm_term: "stairlift for winding stairs", variant: "google" },
-      { shape: "spiral", difficulty: "narrow", refused: "yes", refusedReason: "", who: "me", when: "month", postcode: "EH10 4AB", slot: "am", photo: false, name: "Alan", phone: "07700 900222", utm_term: "refused stairlift", variant: "google" },
-      { shape: "oneTurn", difficulty: "short", refused: "maybe", refusedReason: "Landing is short at the top", who: "parent", when: "explore", postcode: "PA3 2BE", slot: "", photo: false, name: "Priya", phone: "07700 900333", utm_term: "", variant: "meta" },
-      { shape: "straight", difficulty: "none", refused: "no", refusedReason: "", who: "me", when: "month", postcode: "G41 3JX", slot: "eve", photo: false, name: "Hamish", phone: "07700 900444", utm_term: "stairlift", variant: "google" },
-      { shape: "winders", difficulty: "winders", refused: "yes", refusedReason: "Three firms said no", who: "other", when: "three", postcode: "M20 2RT", slot: "am", photo: true, name: "Joan", phone: "07700 900555", utm_term: "four companies said no stairlift", variant: "meta" },
-      { shape: "unsure", difficulty: "door", refused: "no", refusedReason: "", who: "parent", when: "three", postcode: "FK8 1AA", slot: "pm", photo: true, name: "Euan", phone: "07700 900666", utm_term: "", variant: "meta" }
+      { shape: "turn", climbing: ["pain", "unsteady"], refused: "yes", refusedReason: "Said the curve was too tight for their rail", who: "parent", when: "three", postcode: "G12 8QQ", slot: "pm", photo: true, name: "Margaret", phone: "07700 900111", utm_term: "stairlift for winding stairs", variant: "google" },
+      { shape: "different", climbing: ["fall"], refused: "yes", refusedReason: "", who: "me", when: "month", postcode: "EH10 4AB", slot: "am", photo: false, name: "Alan", phone: "07700 900222", utm_term: "refused stairlift", variant: "google" },
+      { shape: "turn", climbing: ["aid", "tired"], refused: "maybe", refusedReason: "Landing is short at the top", who: "parent", when: "explore", postcode: "PA3 2BE", slot: "", photo: false, name: "Priya", phone: "07700 900333", utm_term: "", variant: "meta" },
+      { shape: "straight", climbing: ["pain"], refused: "no", refusedReason: "", who: "me", when: "month", postcode: "G41 3JX", slot: "eve", photo: false, name: "Hamish", phone: "07700 900444", utm_term: "stairlift", variant: "google" },
+      { shape: "turn", climbing: ["cantmanage"], refused: "yes", refusedReason: "Three firms said no", who: "other", when: "three", postcode: "M20 2RT", slot: "am", photo: true, name: "Joan", phone: "07700 900555", utm_term: "four companies said no stairlift", variant: "meta" },
+      { shape: "different", climbing: [], refused: "no", refusedReason: "", who: "parent", when: "explore", postcode: "FK8 1AA", slot: "pm", photo: false, name: "Euan", phone: "07700 900666", utm_term: "", variant: "meta" }
     ];
     var tinyPhoto = "data:image/svg+xml;utf8," + encodeURIComponent(
       '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="120"><rect width="160" height="120" fill="#e9eff0"/><path d="M20 100h30V80h30V60h30V40h30" fill="none" stroke="#1f6f78" stroke-width="4"/><text x="80" y="112" text-anchor="middle" font-size="10" fill="#4a6168" font-family="sans-serif">sample photo</text></svg>'
@@ -324,7 +331,7 @@
       if (b.variant === "google") attr.gclid = "SAMPLE_GCLID_" + i;
       if (b.variant === "meta") attr.fbclid = "SAMPLE_FBCLID_" + i;
       var lead = RF.buildLead(
-        { shape: b.shape, difficulty: b.difficulty, refused: b.refused, refusedReason: b.refusedReason, who: b.who, when: b.when, postcode: b.postcode, slot: b.slot },
+        { shape: b.shape, climbing: b.climbing, refused: b.refused, refusedReason: b.refusedReason, who: b.who, when: b.when, postcode: b.postcode, slot: b.slot },
         { firstName: b.name, phone: b.phone, email: "" },
         b.photo ? tinyPhoto : "",
         attr, false
@@ -361,6 +368,12 @@
     document.querySelectorAll("[data-hours]").forEach(function (el) { el.textContent = C.phone.hours; });
     document.querySelectorAll("[data-buyer]").forEach(function (el) { el.textContent = C.buyer.name; });
     document.querySelectorAll("[data-buyer-number]").forEach(function (el) { el.textContent = C.buyer.callerNumber; });
+    var I = C.installer || {}, W = I.which || {};
+    function fill(sel, v) { if (v) document.querySelectorAll(sel).forEach(function (el) { el.textContent = v; }); }
+    fill("[data-installer]", I.name); fill("[data-installer-legal]", I.legalName);
+    fill("[data-installer-number]", I.companyNumber); fill("[data-installer-town]", I.town);
+    fill("[data-which-rating]", W.rating); fill("[data-which-count]", W.reviews); fill("[data-which-date]", W.checkedOn);
+    if (W.url) document.querySelectorAll("[data-which-link]").forEach(function (el) { el.setAttribute("href", W.url); });
     document.querySelectorAll("[data-buyer-time]").forEach(function (el) { el.textContent = C.buyer.callbackWithin; });
 
     if (C.prototypeBanner) {

@@ -25,7 +25,7 @@
   /* Consent wording from config, with a placeholder link to the privacy policy */
   (function () {
     var label = document.getElementById("consentText");
-    label.textContent = C.consentText.replace(/\{brand\}/g, C.brand) + " See our ";
+    label.textContent = RF.consentText() + " See our ";
     var ph = document.createElement("span");
     ph.className = "ph";
     ph.textContent = "[privacy policy]";
@@ -38,11 +38,14 @@
     var el = form.querySelector('input[name="' + name + '"]:checked');
     return el ? el.value : "";
   }
+  function checkedAll(name) {
+    return Array.prototype.map.call(form.querySelectorAll('input[name="' + name + '"]:checked'), function (el) { return el.value; });
+  }
   function val(id) { return (document.getElementById(id).value || "").trim(); }
 
   function readForm() {
     return {
-      shape: checked("shape"), difficulty: checked("difficulty"), refused: checked("refused"),
+      shape: checked("shape"), climbing: checkedAll("climbing"), refused: checked("refused"),
       refusedReason: val("refusedReason"), who: checked("who"), when: checked("when"),
       postcode: val("postcode"), firstName: val("firstName"), phone: val("phone"),
       email: val("email"), slot: checked("slot"), website: val("website")
@@ -66,14 +69,18 @@
   function restore() {
     var d = RF.session.get("quiz", null);
     if (d) {
-      ["shape", "difficulty", "refused", "who", "when", "slot"].forEach(function (k) { setRadio(k, d[k]); });
+      ["shape", "refused", "who", "when", "slot"].forEach(function (k) { setRadio(k, d[k]); });
+      (d.climbing || []).forEach(function (v) {
+        var el = form.querySelector('input[name="climbing"][value="' + v + '"]');
+        if (el) el.checked = true;
+      });
       ["refusedReason", "postcode", "firstName", "phone", "email"].forEach(function (k) {
         if (d[k]) document.getElementById(k).value = d[k];
       });
       maxStep = d.maxStep || 0;
       if (d.photoThumb) { photoThumb = d.photoThumb; showPreview(); }
     }
-    /* Landing-page tile can preselect the stair shape: ?shape=winders */
+    /* Landing-page tile can preselect the stair shape: ?shape=turn */
     var qs = new URLSearchParams(window.location.search);
     var shape = qs.get("shape");
     if (shape && RF.LABELS.shape[shape]) {
@@ -106,7 +113,7 @@
     clearErrors();
     var d = readForm();
     if (n === 1 && !d.shape) { setErr("1", "Pick the closest shape to continue."); return false; }
-    if (n === 2 && !d.difficulty) { setErr("2", "Pick the main difficulty to continue."); return false; }
+    /* Step 2 (what makes the stairs hard to climb) is optional: health details are never required. */
     if (n === 3 && !d.refused) { setErr("3", "Pick one to continue."); return false; }
     if (n === 4) {
       if (!d.who || !d.when) { setErr("4", "Answer both questions to continue."); return false; }
@@ -249,7 +256,7 @@
 
     var attr = RF.captureAttribution();
     var answers = {
-      shape: d.shape, difficulty: d.difficulty, refused: d.refused, refusedReason: d.refusedReason,
+      shape: d.shape, climbing: d.climbing, refused: d.refused, refusedReason: d.refusedReason,
       who: d.who, when: d.when, postcode: d.postcode, slot: d.slot === "any" ? "" : d.slot
     };
     var lead = RF.buildLead(answers, { firstName: d.firstName, phone: d.phone, email: d.email }, photoThumb, attr, false);
