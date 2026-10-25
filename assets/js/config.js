@@ -19,10 +19,17 @@ window.RF_CONFIG = {
     coveredAreas: ["G", "ML", "PA", "KA", "FK", "EH", "KY"]
   },
 
-  /* Lead delivery. Empty = leads stay in this browser only (localStorage).
-     To send leads somewhere, put an HTTPS endpoint here (Formspree, a Google Apps Script,
-     a Supabase edge function...). The lead JSON is POSTed WITHOUT the photo. */
-  endpoint: "",
+  /* Lead delivery: each lead is emailed using FormSubmit (formsubmit.co), a free form-to-email
+     service, so no server is needed. The very first submission triggers an activation email to
+     emailTo: click the link in it once. After that FormSubmit gives you a random alias; paste the
+     alias into emailTo instead of the address, so your email address is not in the public page.
+     Set emailTo to "" to switch delivery off (leads then stay in this browser only). */
+  delivery: {
+    emailTo: "robertandnadiafarmer@gmail.com",
+    service: "https://formsubmit.co/ajax/",
+    sendFromLocalhost: false,   /* stops local testing from emailing you */
+    timeoutMs: 8000
+  },
 
   /* Duplicate blocking by phone number. Local only in this prototype; needs a server later. */
   blockDuplicates: true,

@@ -254,17 +254,19 @@
     };
     var lead = RF.buildLead(answers, { firstName: d.firstName, phone: d.phone, email: d.email }, photoThumb, attr, false);
 
+    /* Keep a local copy. If the browser refuses (private mode), carry on: the email is what matters. */
     var saved = RF.leads.add(lead);
-    if (!saved) {
-      submitting = false;
-      nextBtn.disabled = false;
-      nextBtn.textContent = "Send my details";
-      formError.textContent = "This browser wouldn't let us save your answers (private browsing can do this). Try a normal window.";
-      return;
-    }
-    RF.deliver(lead);
+
     try { sessionStorage.removeItem(C.storagePrefix + "quiz"); } catch (e) {}
-    window.location.href = thanks + "?id=" + encodeURIComponent(lead.id);
+    var target = thanks + "?id=" + encodeURIComponent(lead.id);
+    var go = function () { window.location.href = target; };
+
+    /* The lead is already safe in this browser. Wait for the email attempt (it times out by
+       itself), record the outcome on the lead, then show the thank-you page either way. */
+    RF.deliver(lead).then(function (res) {
+      if (saved) RF.leads.update(lead.id, { delivery: res });
+      go();
+    }, go);
   }
 
   /* ---------- Boot ---------- */

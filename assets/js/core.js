@@ -189,17 +189,119 @@
     };
   };
 
-  /* Optional delivery to an endpoint. Never sends the photo. Never blocks the user. */
+  /* ---------- Email delivery (FormSubmit) ---------- */
+  /* One readable row per fact, in the order a buyer wants to read them. */
+  RF.emailFields = function (lead) {
+    var a = lead.answers, s = lead.scoring, at = lead.attribution || {}, L = RF.LABELS, t = s.tests;
+    var f = {};
+    f["Tier"] = s.tier === "Standard" ? "Standard" : "Tier " + s.tier;
+    f["Routed to"] = L.stream[s.stream];
+    f["Name"] = lead.contact.firstName;
+    f["Phone"] = lead.contact.phone;
+    f["Email"] = lead.contact.email || "Not given";
+    f["Best time to call"] = a.slot ? L.slot[a.slot] : "Any time";
+    f["Postcode"] = a.postcode + (t.area ? " (inside coverage)" : " (OUTSIDE coverage)");
+    f["Stair shape"] = L.shape[a.shape] || a.shape;
+    f["Main difficulty"] = L.difficulty[a.difficulty] || a.difficulty;
+    f["Already turned down?"] = L.refused[a.refused] || a.refused;
+    f["Reason given"] = a.refusedReason || "None given";
+    f["Stairlift is for"] = L.who[a.who] || a.who;
+    f["Needed"] = L.when[a.when] || a.when;
+    f["Photo"] = lead.photo.attached ? "Attached to this email (if missing, it did not upload)" : "None";
+    f["Tests passed"] = "Stairs: " + (t.stairs ? "yes" : "no") + ". Area: " + (t.area ? "yes" : "no") +
+      ". Timing: " + (t.timing ? "yes" : "no") + ". Evidence: " + (t.evidence ? "yes" : "no");
+    f["Channel"] = at.gclid ? "Google (gclid captured)" : at.fbclid ? "Meta (fbclid captured)" : (lead.variant || "direct");
+    f["Search phrase"] = at.utm_term || "Not captured";
+    f["Campaign"] = at.utm_campaign || "Not captured";
+    f["Landing page"] = lead.variant;
+    f["gclid"] = at.gclid || at.gbraid || at.wbraid || "";
+    f["fbclid"] = at.fbclid || "";
+    f["Consent given"] = lead.consent.at;
+    f["Consent wording version"] = lead.consent.version;
+    f["Consent wording"] = lead.consent.text;
+    f["Lead ID"] = lead.id;
+    return f;
+  };
+
+  /* Handles base64 and URL-encoded data URLs. Returns null if it cannot be converted. */
+  function dataUrlToBlob(dataUrl) {
+    try {
+      var comma = dataUrl.indexOf(",");
+      var head = dataUrl.slice(0, comma), body = dataUrl.slice(comma + 1);
+      var mime = (head.match(/^data:([^;,]+)/) || [])[1] || "image/jpeg";
+      if (/;base64/.test(head)) {
+        var bin = atob(body);
+        var arr = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        return new Blob([arr], { type: mime });
+      }
+      return new Blob([decodeURIComponent(body)], { type: mime });
+    } catch (e) { return null; }
+  }
+
+  function isLocal() {
+    var h = window.location.hostname;
+    return window.location.protocol === "file:" || h === "localhost" || h === "127.0.0.1" || h === "[::1]" || h === "";
+  }
+
+  /* Resolves (never rejects) with { ok, at, message, skipped?, photoDropped? }.
+     Tries once with the photo attached, and once more without it if that fails. */
   RF.deliver = function (lead) {
-    if (!C.endpoint) return Promise.resolve(false);
-    var copy = JSON.parse(JSON.stringify(lead));
-    copy.photo = { attached: lead.photo.attached };
-    return fetch(C.endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(copy),
-      keepalive: true
-    }).then(function (r) { return r.ok; }).catch(function () { return false; });
+    var D = C.delivery || {};
+    var now = function () { return new Date().toISOString(); };
+    if (!D.emailTo) return Promise.resolve({ ok: false, skipped: "off", at: now(), message: "Email delivery is switched off in config.js" });
+    if (lead.sample) return Promise.resolve({ ok: false, skipped: "sample", at: now(), message: "Sample lead, not emailed" });
+    if (isLocal() && !D.sendFromLocalhost) return Promise.resolve({ ok: false, skipped: "local", at: now(), message: "Not sent: running locally" });
+
+    function send(withPhoto) {
+      var fd = new FormData();
+      var fields = RF.emailFields(lead);
+      Object.keys(fields).forEach(function (k) { if (fields[k] !== "") fd.append(k, fields[k]); });
+      var s = lead.scoring;
+      fd.append("_subject", "New lead: " + (s.tier === "Standard" ? "Standard" : "Tier " + s.tier) + " | " + RF.LABELS.stream[s.stream] + " | " + lead.answers.postcode);
+      fd.append("_template", "table");
+      fd.append("_captcha", "false");
+      if (lead.contact.email) fd.append("email", lead.contact.email); /* becomes the Reply-To */
+      if (withPhoto && lead.photo.thumb) {
+        var blob = dataUrlToBlob(lead.photo.thumb); /* a bad photo must never stop the lead going */
+        if (blob) fd.append("attachment", blob, "stairs-" + lead.id + (blob.type === "image/jpeg" ? ".jpg" : ".img"));
+      }
+
+      var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
+      var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, D.timeoutMs || 8000);
+      return fetch(D.service + D.emailTo, {
+        method: "POST", headers: { Accept: "application/json" }, body: fd, signal: ctrl ? ctrl.signal : undefined
+      }).then(function (r) {
+        clearTimeout(timer);
+        return r.json().catch(function () { return {}; }).then(function (j) {
+          var failed = !r.ok || j.success === false || j.success === "false";
+          return { ok: !failed, http: true, at: now(), message: (j && j.message) || (failed ? "HTTP " + r.status : "Sent"), photoDropped: !withPhoto && !!lead.photo.attached };
+        });
+      }).catch(function (e) {
+        clearTimeout(timer);
+        return { ok: false, at: now(), message: "Network error or timeout", photoDropped: !withPhoto && !!lead.photo.attached };
+      });
+    }
+
+    return send(true).then(function (res) {
+      /* Only retry without the photo after a real server rejection, never after a timeout (could double-send). */
+      if (res.ok || !lead.photo.thumb || !res.http) return res;
+      return send(false);
+    });
+  };
+
+  /* Re-send everything that did not get through (real leads only). */
+  RF.deliverUnsent = function () {
+    var todo = RF.leads.list().filter(function (l) { return !l.sample && !(l.delivery && l.delivery.ok); });
+    var ok = 0;
+    return todo.reduce(function (p, l) {
+      return p.then(function () {
+        return RF.deliver(l).then(function (res) {
+          RF.leads.update(l.id, { delivery: res });
+          if (res.ok) ok++;
+        });
+      });
+    }, Promise.resolve()).then(function () { return { tried: todo.length, sent: ok }; });
   };
 
   /* ---------- Sample leads, so the buyer view has something to show ---------- */

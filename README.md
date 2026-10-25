@@ -1,6 +1,6 @@
 # rfstairlifts: funnel prototype (draft v1)
 
-A static, build-free prototype of the Project Codex funnel, ready for GitHub Pages. Two entry pages feed one six-question quiz. Every answer is scored against the draft lead spec and routed. Leads are stored in the visitor's own browser, so nothing is sent anywhere until you choose to wire it up.
+A static, build-free prototype of the Project Codex funnel, ready for GitHub Pages. Two entry pages feed one six-question quiz. Every answer is scored against the draft lead spec and routed. Each lead is emailed to you through FormSubmit and a copy is kept in the visitor's own browser.
 
 ## Put it on GitHub Pages
 
@@ -57,15 +57,30 @@ Anything in yellow brackets: phone number, hours, installer name and credentials
 4. Open `/demo/leads/` and press **Add sample leads** to see every tier at once.
 5. Test attribution: add `?gclid=test&utm_term=refused%20stairlift` to the Google page URL, then complete the quiz.
 
-## Sending leads somewhere
+## How leads reach your inbox
 
-Set `endpoint` in `config.js` to an HTTPS URL that accepts a JSON POST (Formspree, a Google Apps Script, a Supabase edge function). The lead is sent without the photo. Note that anything put on a public GitHub Pages site, including the endpoint address, is visible to visitors, so protect it with server-side rate limits and validation.
+Each completed quiz is emailed to the address in `assets/js/config.js` (`delivery.emailTo`) through [FormSubmit](https://formsubmit.co), a free form-to-email service. No server or account is needed. The email is a readable table: tier and routing, contact details, the stairs, the reason for any earlier refusal, where the lead came from (channel, search phrase, click ID), the consent wording the person saw, and the photo as an attachment. The subject line reads like `New lead: Tier A | Premium (Tier A/B, in area) | G12 8QQ`, with no name in it.
+
+**First-time setup (two minutes):**
+1. Deploy to GitHub Pages and complete the quiz once on the live site. Emails are deliberately not sent when you run it locally.
+2. FormSubmit emails an **activation link** to the address. Click it. Check spam.
+3. After activating, FormSubmit gives you a random alias for the address. **Put the alias in `emailTo` in place of the email address**, so the address is not sitting in your public page, where spam bots can read it.
+4. Complete the quiz again and check the email arrives, including the photo.
+
+**If an email fails** (service down, no signal, not yet activated), the lead is still saved in that visitor's browser and the visitor still sees the thank-you page. On `/demo/leads/` the Email column shows Emailed, Failed or Not sent, and **Resend unsent by email** retries. That only helps on the same device though, so check your inbox against the leads you expect while testing. A real store is the fix for this later.
+
+Things to know:
+- The photo attachment goes by multipart upload. It is the least-proven part, so test it. If the server rejects the email with the photo, the lead is re-sent once without it.
+- A timeout or network error is never retried automatically, so a lead cannot be emailed twice by mistake.
+- Anything in a public GitHub Pages repo is visible, including `emailTo`. Use the alias, and expect some junk submissions over time. The spam trap and phone check catch most of it.
+- FormSubmit and Gmail both handle each lead, so both are data processors for your privacy notice. Using a shared personal Gmail for people's phone numbers and stair photos is fine to start, but move to a dedicated business address before real ads.
+- To switch email off, set `emailTo` to `""`.
 
 ## Before this is anything but a prototype
 
 - [ ] Remove the prototype banner (`prototypeBanner: false`), `noindex` meta tags and `robots.txt` when you are ready to be found.
-- [ ] Replace local storage with a real lead store, and move duplicate blocking and tiering server-side so they cannot be bypassed.
-- [ ] Privacy notice, cookie consent (gate Google Ads and Meta tags on it) and ICO registration. Have the consent wording and buyer terms reviewed by a solicitor or data protection adviser.
+- [ ] Move duplicate blocking and tiering server-side (or into whatever receives the leads) so they cannot be bypassed. Email works to start; a proper lead store gives you retries, de-duplication across devices and a record of what each buyer was sent.
+- [ ] Privacy notice (naming FormSubmit and your email provider as processors), cookie consent (gate Google Ads and Meta tags on it) and ICO registration. Have the consent wording and buyer terms reviewed by a solicitor or data protection adviser.
 - [ ] Confirm the retention period for leads outside any buyer's area (the thank-you page says "limited time").
 - [ ] Real trust content: credentials, install photos, response times. Delete any claim you cannot back up.
 - [ ] Clear the brand name, then change `brand` in `config.js` and the page titles.

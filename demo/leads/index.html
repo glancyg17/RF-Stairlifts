@@ -22,6 +22,7 @@
     <a class="btn teal small" href="../../stairlifts/">Try the Google page</a>
     <a class="btn ghost small" href="../../stairlifts/refused/">Try the Meta page</a>
     <button class="btn ghost small" type="button" id="samples">Add sample leads</button>
+    <button class="btn ghost small" type="button" id="resend">Resend unsent by email</button>
     <button class="btn ghost small" type="button" id="export">Export CSV</button>
     <button class="btn ghost small" type="button" id="clear">Clear all</button>
   </div>
@@ -31,7 +32,7 @@
     <table class="leads">
       <caption class="sr-only">Leads received</caption>
       <thead>
-        <tr><th scope="col">Received</th><th scope="col">Name</th><th scope="col">Postcode</th><th scope="col">Tier</th><th scope="col">Stream</th><th scope="col">Source</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Open</span></th></tr>
+        <tr><th scope="col">Received</th><th scope="col">Name</th><th scope="col">Postcode</th><th scope="col">Tier</th><th scope="col">Stream</th><th scope="col">Source</th><th scope="col">Status</th><th scope="col">Email</th><th scope="col"><span class="sr-only">Open</span></th></tr>
       </thead>
       <tbody id="rows"></tbody>
     </table>
@@ -59,7 +60,7 @@
     ].map(function (p) { return '<div class="stat"><div class="n">' + (c[p[0]] || 0) + '</div><div class="l">' + p[1] + '</div></div>'; }).join("");
 
     if (!all.length) {
-      rows.innerHTML = '<tr><td colspan="8" class="muted" style="padding:28px 14px">No leads yet. Complete the quiz, or add sample leads to see how each tier looks.</td></tr>';
+      rows.innerHTML = '<tr><td colspan="9" class="muted" style="padding:28px 14px">No leads yet. Complete the quiz, or add sample leads to see how each tier looks.</td></tr>';
       return;
     }
     rows.innerHTML = all.map(function (l) {
@@ -67,7 +68,9 @@
       var src = at.gclid ? "Google" : at.fbclid ? "Meta" : l.variant;
       var tier = l.scoring.tier === "Standard" ? '<span class="badge grey">Standard</span>' : '<span class="badge' + (l.scoring.tier === "A" ? " fill" : "") + '">Tier ' + esc(l.scoring.tier) + '</span>';
       var status = l.status === "accepted" ? '<span class="badge fill">Accepted</span>' : l.status === "rejected" ? '<span class="badge warn">Rejected</span>' : '<span class="muted">New</span>';
-      return '<tr><td>' + esc(RF.fmtDate(l.createdAt)) + '</td><td>' + esc(l.contact.firstName) + (l.sample ? ' <span class="muted small-text">(sample)</span>' : "") + '</td><td>' + esc(l.answers.postcode) + '</td><td>' + tier + '</td><td>' + esc(L.stream[l.scoring.stream]) + '</td><td>' + esc(src) + '</td><td>' + status + '</td><td><a href="../lead/?id=' + encodeURIComponent(l.id) + '">Open<span class="sr-only"> lead ' + esc(l.id) + '</span></a></td></tr>';
+      var d = l.delivery;
+      var mail = l.sample ? '<span class="muted">n/a</span>' : !d ? '<span class="badge warn">Not sent</span>' : d.ok ? '<span class="badge">Emailed</span>' : d.skipped ? '<span class="badge grey" title="' + esc(d.message) + '">Not sent (' + esc(d.skipped) + ')</span>' : '<span class="badge warn" title="' + esc(d.message) + '">Failed</span>';
+      return '<tr><td>' + esc(RF.fmtDate(l.createdAt)) + '</td><td>' + esc(l.contact.firstName) + (l.sample ? ' <span class="muted small-text">(sample)</span>' : "") + '</td><td>' + esc(l.answers.postcode) + '</td><td>' + tier + '</td><td>' + esc(L.stream[l.scoring.stream]) + '</td><td>' + esc(src) + '</td><td>' + status + '</td><td>' + mail + '</td><td><a href="../lead/?id=' + encodeURIComponent(l.id) + '">Open<span class="sr-only"> lead ' + esc(l.id) + '</span></a></td></tr>';
     }).join("");
   }
 
@@ -76,6 +79,14 @@
     RF.store.set("leads", RF.sampleLeads().concat(existing));
     msg.textContent = "Sample leads added. Real submissions are kept.";
     render();
+  });
+
+  document.getElementById("resend").addEventListener("click", function () {
+    msg.textContent = "Sending...";
+    RF.deliverUnsent().then(function (r) {
+      msg.textContent = r.tried === 0 ? "Everything has already been emailed." : "Tried " + r.tried + ", emailed " + r.sent + (r.sent < r.tried ? ". The rest failed or were skipped (hover the badge for the reason). Local testing never emails." : ".");
+      render();
+    });
   });
 
   document.getElementById("clear").addEventListener("click", function () {
