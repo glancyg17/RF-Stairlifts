@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Lead sheet (buyer view, prototype)</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body data-root="../../">
+<a class="skip" href="#main">Skip to the main content</a>
+
+<main id="main" class="wrap stack gap-24" style="max-width:820px;padding-top:32px;padding-bottom:56px">
+  <div><a href="../leads/">All leads</a></div>
+  <div id="sheet" class="stack gap-24"><p class="muted">Loading lead...</p></div>
+</main>
+
+<script src="../../assets/js/config.js"></script>
+<script src="../../assets/js/core.js"></script>
+<script>
+(function () {
+  var L = RF.LABELS, esc = RF.esc;
+  var id = new URLSearchParams(window.location.search).get("id");
+  var root = document.getElementById("sheet");
+  var lead = id ? RF.leads.get(id) : null;
+
+  var TICK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+  var CROSS = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+  function kv(k, v) { return '<div class="kv"><div class="k">' + esc(k) + '</div><div class="v">' + v + '</div></div>'; }
+  function test(ok, label) { return '<span class="' + (ok ? "yes" : "no") + '">' + (ok ? TICK : CROSS) + esc(label) + '</span>'; }
+
+  if (!lead) {
+    root.innerHTML = '<h1>Lead not found</h1><p class="lead-copy">It may have been cleared, or it was made in a different browser. Leads in this prototype live in the browser that created them.</p><p><a class="btn" href="../leads/">Back to all leads</a></p>';
+    return;
+  }
+
+  var a = lead.answers, s = lead.scoring, at = lead.attribution || {};
+  var channel = at.gclid ? "Google search" : at.fbclid ? "Meta (Facebook / Instagram)" : (lead.variant === "google" ? "Google page (no click ID)" : lead.variant === "meta" ? "Meta page (no click ID)" : "Direct");
+  var tierBadge = s.tier === "Standard" ? '<span class="badge tier grey">Standard</span>' : '<span class="badge tier fill">Tier ' + esc(s.tier) + '</span>';
+  var premium = s.stream === "premium";
+
+  var html = "";
+  html += '<div class="stack gap-12"><div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start;justify-content:space-between">' +
+    '<div><h1 style="font-size:30px;line-height:1.1">Lead ' + esc(lead.id) + '</h1>' +
+    '<div class="small-text muted" style="margin-top:4px">Received ' + esc(RF.fmtDate(lead.createdAt)) + (lead.sample ? ". Sample data." : ". Created in this browser.") + '</div></div>' +
+    '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="badge">Awkward stairs</span>' + tierBadge + '</div></div>' +
+    (premium ? "" : '<div class="proto-panel"><strong>Not for the premium buyer.</strong> This lead is in the <strong>' + esc(L.stream[s.stream]) + '</strong>. It is shown here so you can see how it would be held, not because it would be delivered.</div>') +
+    '</div>';
+
+  html += '<div class="sheet-grid">';
+
+  html += '<section class="sheet-card" aria-labelledby="c1"><h2 id="c1">Contact</h2>' +
+    kv("Name", esc(lead.contact.firstName)) +
+    kv("Phone", esc(lead.contact.phone) + ' <span class="yes small-text" style="margin-left:6px">' + TICK + 'Valid UK number</span>') +
+    kv("Email", lead.contact.email ? esc(lead.contact.email) : "Not given") +
+    kv("Best time to call", a.slot ? esc(L.slot[a.slot]) : "Any time") + '</section>';
+
+  html += '<section class="sheet-card" aria-labelledby="c2"><h2 id="c2">The stairs</h2>' +
+    kv("Shape", esc(L.shape[a.shape] || a.shape)) +
+    kv("Main difficulty", esc(L.difficulty[a.difficulty] || a.difficulty)) +
+    kv("Already turned down?", esc(L.refused[a.refused] || a.refused)) +
+    kv("Reason given, in their words", a.refusedReason ? esc(a.refusedReason) : '<span class="muted">None given</span>') +
+    '<div class="kv"><div class="k">Photo</div><div class="v">' +
+      (lead.photo.attached && lead.photo.thumb ? '<img src="' + esc(lead.photo.thumb) + '" alt="Photo of the stairs supplied with the enquiry" style="width:160px;max-width:100%;border-radius:8px;border:1px solid var(--line)">' : "No photo") +
+    '</div></div></section>';
+
+  html += '<section class="sheet-card" aria-labelledby="c3"><h2 id="c3">Who and when</h2>' +
+    kv("Stairlift is for", esc(L.who[a.who] || a.who)) +
+    kv("Needed", esc(L.when[a.when] || a.when)) + '</section>';
+
+  html += '<section class="sheet-card" aria-labelledby="c4"><h2 id="c4">Location</h2>' +
+    kv("Postcode", esc(a.postcode)) +
+    kv("Your coverage area", '<span class="' + (s.tests.area ? "yes" : "no") + '">' + (s.tests.area ? TICK + "Inside" : CROSS + "Outside") + '</span>') + '</section>';
+
+  html += '<section class="sheet-card" aria-labelledby="c5"><h2 id="c5">Where they came from</h2>' +
+    kv("Channel", esc(channel)) +
+    kv("Search phrase", at.utm_term ? esc(at.utm_term) : '<span class="muted">Not captured</span>') +
+    kv("Landing page", esc(lead.variant)) +
+    kv("Click ID", at.gclid ? "gclid captured" : at.fbclid ? "fbclid captured" : '<span class="muted">None</span>') + '</section>';
+
+  html += '<section class="sheet-card" aria-labelledby="c6"><h2 id="c6">Consent record</h2>' +
+    kv("Given", esc(RF.fmtDate(lead.consent.at))) +
+    kv("Wording version", esc(lead.consent.version)) +
+    kv("Shared with", "One installer only: you") + '</section>';
+
+  html += '</div>';
+
+  html += '<section class="callout" aria-labelledby="why"><div class="t" id="why">Why this is ' + (s.tier === "Standard" ? "Standard" : "Tier " + esc(s.tier)) +
+    ' <span class="small-text muted" style="font-weight:400">(draft rules to agree with your buyer)</span></div>' +
+    '<div class="tests">' + test(s.tests.stairs, "Turned down or complex stairs") + test(s.tests.area, "In your area") + test(s.tests.timing, "Needed within 3 months") + test(s.tests.evidence, "Photo or reason supplied") + '</div>' +
+    '<div class="small-text muted" style="margin-top:10px">Tier B meets three of these. Tier C is fewer, or someone just exploring. Regular stairlift enquiries with no difficulty are tagged Standard and kept in a separate stream.</div></section>';
+
+  html += '<section class="stack gap-12" aria-labelledby="act"><h2 id="act" class="sr-only">Decision</h2><div id="actions"></div>' +
+    '<div class="small-text muted">Agree the rejection reasons and the time limit for using them in writing.</div></section>';
+
+  root.innerHTML = html;
+
+  var actions = document.getElementById("actions");
+  function renderActions() {
+    var cur = RF.leads.get(lead.id);
+    if (cur.status === "accepted") {
+      actions.innerHTML = '<div class="stack gap-12"><span class="badge fill" style="align-self:flex-start">Accepted</span><button class="btn ghost small" type="button" id="undo" style="align-self:flex-start">Undo</button></div>';
+    } else if (cur.status === "rejected") {
+      actions.innerHTML = '<div class="stack gap-12"><span class="badge warn" style="align-self:flex-start">Rejected: ' + esc(cur.rejectReason) + '</span><button class="btn ghost small" type="button" id="undo" style="align-self:flex-start">Undo</button></div>';
+    } else {
+      actions.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">' +
+        '<button class="btn teal" type="button" id="accept">Accept lead</button>' +
+        '<label for="rej" class="sr-only">Reason for rejecting</label>' +
+        '<select class="input" id="rej" style="width:auto;min-width:260px;font-size:17px">' +
+        '<option value="">Reject, choose a reason</option>' +
+        '<option>Wrong or unreachable number</option><option>Outside my area</option><option>Duplicate of an existing enquiry</option><option>Not the person who enquired</option><option>Stairs clearly different from stated</option>' +
+        '</select></div><div class="error" id="rejErr" role="alert"></div>';
+    }
+    var acc = document.getElementById("accept");
+    if (acc) acc.addEventListener("click", function () { RF.leads.update(lead.id, { status: "accepted", rejectReason: "" }); renderActions(); });
+    var rej = document.getElementById("rej");
+    if (rej) rej.addEventListener("change", function () {
+      if (!rej.value) return;
+      RF.leads.update(lead.id, { status: "rejected", rejectReason: rej.value });
+      renderActions();
+    });
+    var undo = document.getElementById("undo");
+    if (undo) undo.addEventListener("click", function () { RF.leads.update(lead.id, { status: "new", rejectReason: "" }); renderActions(); });
+  }
+  renderActions();
+})();
+</script>
+</body>
+</html>

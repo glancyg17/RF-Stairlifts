@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Check your stairs</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="quiz-page" data-root="../../">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="s-straight" viewBox="0 0 64 64"><rect x="22" y="6" width="20" height="52" rx="1"/><path d="M22 14h20M22 22h20M22 30h20M22 38h20M22 46h20"/></symbol>
+    <symbol id="s-oneturn" viewBox="0 0 64 64"><path d="M8 58V6h50v20H28v32z"/><path d="M8 26h20M8 34h20M8 42h20M8 50h20M36 6v20M44 6v20M52 6v20"/></symbol>
+    <symbol id="s-winders" viewBox="0 0 64 64"><path d="M8 58V6h50v20H28v32z"/><path d="M28 26L8 26M28 26L8 14M28 26L19 6M28 26V6M8 34h20M8 42h20M8 50h20"/></symbol>
+    <symbol id="s-spiral" viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"/><circle cx="32" cy="32" r="6"/><path d="M38 32h18M36.2 36.2L49 49M32 38v18M27.8 36.2L15 49M26 32H8M27.8 27.8L15 15M32 26V8M36.2 27.8L49 15"/></symbol>
+    <symbol id="s-unsure" viewBox="0 0 64 64"><rect x="8" y="8" width="48" height="48" rx="8" stroke-dasharray="5 5"/><text x="32" y="43" text-anchor="middle" font-size="30" font-family="Atkinson Hyperlegible, sans-serif" fill="#1F6F78" stroke="none">?</text></symbol>
+  </defs>
+</svg>
+
+<header class="quiz-top">
+  <div class="wrap">
+    <a class="brand" href="../" aria-label="Back to the start">
+      <span class="tape logo-mark small" aria-hidden="true"></span>
+      <span class="brand-name" data-brand>rfstairlifts</span>
+    </a>
+    <div class="step-label" id="stepLabel" aria-live="polite">Question 1 of 6</div>
+  </div>
+</header>
+<div class="measure-bar" role="progressbar" aria-label="Progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="14" id="bar"><div class="fill" id="fill"></div></div>
+
+<main class="quiz-main" id="main">
+  <form id="quiz" novalidate autocomplete="on">
+
+    <!-- 1: shape -->
+    <section class="q-step" data-step="1" aria-labelledby="h1">
+      <h1 id="h1" tabindex="-1">What shape are your stairs?</h1>
+      <p class="small-text muted" id="d1">Pick the closest. A rough idea is fine.</p>
+      <fieldset aria-describedby="d1">
+        <legend class="sr-only">Stair shape</legend>
+        <div class="tiles">
+          <label class="choice tile-face"><input type="radio" name="shape" value="straight"><span class="face"><svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><use href="#s-straight"/></svg><span>Straight, no turns</span></span></label>
+          <label class="choice tile-face"><input type="radio" name="shape" value="oneTurn"><span class="face"><svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><use href="#s-oneturn"/></svg><span>One turn with a landing</span></span></label>
+          <label class="choice tile-face"><input type="radio" name="shape" value="winders"><span class="face"><svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><use href="#s-winders"/></svg><span>Steps that fan round a corner</span></span></label>
+          <label class="choice tile-face"><input type="radio" name="shape" value="spiral"><span class="face"><svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><use href="#s-spiral"/></svg><span>Spiral or tightly curving</span></span></label>
+          <label class="choice tile-face" style="grid-column:span 2"><input type="radio" name="shape" value="unsure"><span class="face"><svg width="48" height="48" viewBox="0 0 64 64" fill="none" stroke="#1F6F78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><use href="#s-unsure"/></svg><span>Not sure, or something different</span></span></label>
+        </div>
+      </fieldset>
+      <div class="error" data-err="1" role="alert"></div>
+    </section>
+
+    <!-- 2: difficulty -->
+    <section class="q-step" data-step="2" aria-labelledby="h2" hidden>
+      <h1 id="h2" tabindex="-1">What makes your stairs difficult?</h1>
+      <p class="small-text muted" id="d2">Pick the main one. You can add detail with the installer later.</p>
+      <fieldset aria-describedby="d2">
+        <legend class="sr-only">Main difficulty</legend>
+        <div class="options">
+          <label class="choice"><input type="radio" name="difficulty" value="narrow"><span class="face"><span class="dot"></span><span>The stairs are narrow</span></span></label>
+          <label class="choice"><input type="radio" name="difficulty" value="steep"><span class="face"><span class="dot"></span><span>The stairs are steep</span></span></label>
+          <label class="choice"><input type="radio" name="difficulty" value="winders"><span class="face"><span class="dot"></span><span>Winding or fan-shaped steps</span></span></label>
+          <label class="choice"><input type="radio" name="difficulty" value="short"><span class="face"><span class="dot"></span><span>They stop short at the top or bottom</span></span></label>
+          <label class="choice"><input type="radio" name="difficulty" value="door"><span class="face"><span class="dot"></span><span>A door opens onto the stairs</span></span></label>
+          <label class="choice"><input type="radio" name="difficulty" value="weight"><span class="face"><span class="dot"></span><span>Weight or size of the person</span></span></label>
+          <label class="choice"><input type="radio" name="difficulty" value="none"><span class="face"><span class="dot"></span><span>No difficulty, a regular stairlift</span></span></label>
+          <label class="choice"><input type="radio" name="difficulty" value="other"><span class="face"><span class="dot"></span><span>Something else</span></span></label>
+        </div>
+      </fieldset>
+      <div class="error" data-err="2" role="alert"></div>
+    </section>
+
+    <!-- 3: earlier refusal -->
+    <section class="q-step" data-step="3" aria-labelledby="h3" hidden>
+      <h1 id="h3" tabindex="-1">Has a company already said a stairlift can't be fitted?</h1>
+      <p class="small-text muted" id="d3">This helps us match you with someone who handles difficult stairs.</p>
+      <fieldset aria-describedby="d3">
+        <legend class="sr-only">Earlier refusal</legend>
+        <div class="options">
+          <label class="choice"><input type="radio" name="refused" value="yes"><span class="face"><span class="dot"></span><span>Yes, a company has said no</span></span></label>
+          <label class="choice"><input type="radio" name="refused" value="maybe"><span class="face"><span class="dot"></span><span>One said it might not work</span></span></label>
+          <label class="choice"><input type="radio" name="refused" value="no"><span class="face"><span class="dot"></span><span>No, this is my first enquiry</span></span></label>
+        </div>
+      </fieldset>
+      <div class="field" id="reasonField" hidden>
+        <label for="refusedReason">What reason were you given? (optional)</label>
+        <textarea class="textarea" id="refusedReason" name="refusedReason" rows="3" maxlength="500"></textarea>
+      </div>
+      <div class="error" data-err="3" role="alert"></div>
+    </section>
+
+    <!-- 4: who and when -->
+    <section class="q-step" data-step="4" aria-labelledby="h4" hidden>
+      <h1 id="h4" tabindex="-1">Who is it for, and how soon?</h1>
+      <fieldset class="stack gap-12">
+        <legend><strong>Who is the stairlift for?</strong></legend>
+        <div class="pills">
+          <label class="choice pill"><input type="radio" name="who" value="me"><span class="face">For me</span></label>
+          <label class="choice pill"><input type="radio" name="who" value="parent"><span class="face">For a parent</span></label>
+          <label class="choice pill"><input type="radio" name="who" value="other"><span class="face">For someone else</span></label>
+        </div>
+      </fieldset>
+      <fieldset class="stack gap-12">
+        <legend><strong>How soon is it needed?</strong></legend>
+        <div class="pills">
+          <label class="choice pill"><input type="radio" name="when" value="month"><span class="face">Within a month</span></label>
+          <label class="choice pill"><input type="radio" name="when" value="three"><span class="face">Within 3 months</span></label>
+          <label class="choice pill"><input type="radio" name="when" value="explore"><span class="face">Just exploring</span></label>
+        </div>
+      </fieldset>
+      <div class="error" data-err="4" role="alert"></div>
+    </section>
+
+    <!-- 5: where + photo -->
+    <section class="q-step" data-step="5" aria-labelledby="h5" hidden>
+      <h1 id="h5" tabindex="-1">Where are the stairs?</h1>
+      <div class="field">
+        <label for="postcode">Postcode</label>
+        <input class="input" id="postcode" name="postcode" type="text" autocomplete="postal-code" autocapitalize="characters" inputmode="text" maxlength="9" style="font-size:20px">
+        <div class="error" data-err="postcode" role="alert"></div>
+      </div>
+      <div class="field">
+        <span class="label" id="photoLabel">Add a photo of the stairs (optional)</span>
+        <span class="hint" id="photoHint">A photo from the bottom looking up helps the installer give a straight answer sooner. You can skip this.</span>
+        <label class="upload" id="uploadBtn"><input type="file" id="photo" accept="image/*" aria-labelledby="photoLabel" aria-describedby="photoHint"><span id="uploadText">Add a photo</span></label>
+        <div class="preview" id="preview" hidden>
+          <img id="previewImg" alt="Your photo of the stairs">
+          <button type="button" class="btn ghost small" id="photoRemove">Remove photo</button>
+        </div>
+        <div class="error" data-err="photo" role="alert"></div>
+        <div class="hint" id="photoProto">Prototype: the photo is shrunk and kept in this browser only.</div>
+      </div>
+      <div class="error" data-err="5" role="alert"></div>
+    </section>
+
+    <!-- 6: contact + consent -->
+    <section class="q-step" data-step="6" aria-labelledby="h6" hidden>
+      <h1 id="h6" tabindex="-1">Where should the installer call?</h1>
+      <div class="field">
+        <label for="firstName">First name</label>
+        <input class="input" id="firstName" name="firstName" type="text" autocomplete="given-name" maxlength="60">
+        <div class="error" data-err="firstName" role="alert"></div>
+      </div>
+      <div class="field">
+        <label for="phone">Phone number (mobile or landline)</label>
+        <input class="input" id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" aria-describedby="phoneHint">
+        <div class="hint" id="phoneHint">We'll only use it to call or text about your enquiry.</div>
+        <div class="error" data-err="phone" role="alert"></div>
+      </div>
+      <div class="field">
+        <label for="email">Email (optional)</label>
+        <input class="input" id="email" name="email" type="email" autocomplete="email" maxlength="120">
+        <div class="error" data-err="email" role="alert"></div>
+      </div>
+      <fieldset class="stack gap-12">
+        <legend><strong>Best time to call (optional)</strong></legend>
+        <div class="pills">
+          <label class="choice pill"><input type="radio" name="slot" value="any" checked><span class="face">Any time</span></label>
+          <label class="choice pill"><input type="radio" name="slot" value="am"><span class="face">Morning</span></label>
+          <label class="choice pill"><input type="radio" name="slot" value="pm"><span class="face">Afternoon</span></label>
+          <label class="choice pill"><input type="radio" name="slot" value="eve"><span class="face">Evening</span></label>
+        </div>
+      </fieldset>
+
+      <!-- Spam trap: real people never see or fill this -->
+      <div class="hp" aria-hidden="true">
+        <label for="website">Leave this field empty</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div>
+        <div class="consent">
+          <input type="checkbox" id="consent" name="consent" aria-describedby="consentText">
+          <label for="consent" id="consentText"></label>
+        </div>
+        <div class="error" data-err="consent" role="alert" style="margin-top:8px"></div>
+      </div>
+      <div class="form-error" id="formError" role="alert"></div>
+    </section>
+
+  </form>
+</main>
+
+<nav class="quiz-nav" aria-label="Quiz navigation">
+  <div class="inner">
+    <button type="button" class="btn ghost" id="back" hidden>Back</button>
+    <button type="button" class="btn next" id="next">Continue</button>
+  </div>
+</nav>
+
+<script src="../../assets/js/config.js"></script>
+<script src="../../assets/js/core.js"></script>
+<script src="../../assets/js/quiz.js"></script>
+</body>
+</html>

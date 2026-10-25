@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Thank you</title>
+<link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="quiz-page" data-root="../../">
+
+<header class="quiz-top">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <span class="tape logo-mark small" aria-hidden="true"></span>
+      <span class="brand-name" data-brand>rfstairlifts</span>
+    </a>
+    <div class="step-label">Done</div>
+  </div>
+</header>
+<div class="measure-bar" aria-hidden="true"><div class="fill" style="width:100%"></div></div>
+
+<main class="quiz-main" id="main" style="padding-bottom:48px">
+  <div class="stack gap-24">
+    <div class="done-mark" aria-hidden="true">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>
+    </div>
+
+    <h1 id="headline" tabindex="-1">Thank you.</h1>
+    <div id="body" class="stack gap-24"></div>
+
+    <div class="callout">
+      <div class="t">While you wait</div>
+      <div class="lead-copy small-text"><span class="ph">[Link to your funding guide: VAT relief and council grants]</span></div>
+    </div>
+
+    <div id="proto" class="proto-panel" hidden></div>
+
+    <div><a class="small-text muted" href="../">Back to the start</a></div>
+  </div>
+</main>
+
+<script src="../../assets/js/config.js"></script>
+<script src="../../assets/js/core.js"></script>
+<script>
+(function () {
+  var C = window.RF_CONFIG;
+  var id = new URLSearchParams(window.location.search).get("id");
+  var lead = id ? RF.leads.get(id) : null;
+  var name = lead ? lead.contact.firstName : "";
+  var h = document.getElementById("headline");
+  var body = document.getElementById("body");
+
+  function li(n, html) { return '<li><span class="n" aria-hidden="true">' + n + '</span><div>' + html + '</div></li>'; }
+
+  var stream = lead ? lead.scoring.stream : "";
+  var area = lead ? lead.answers.postcodeArea : "";
+
+  if (stream === "premium") {
+    h.textContent = "Thank you" + (name ? ", " + name : "") + ". Your details are with " + C.buyer.name + ".";
+    body.innerHTML =
+      '<div class="stack gap-16"><div><strong>What happens next</strong></div><ol class="next-list">' +
+      li(1, "They'll ring you from <span class=\"ph\">" + RF.esc(C.buyer.callerNumber) + "</span> within <span class=\"ph\">" + RF.esc(C.buyer.callbackWithin) + "</span>. Please pick up if you don't recognise it.") +
+      li(2, "They'll talk through your stairs and arrange a survey.") +
+      li(3, "You decide. There's no obligation.") + "</ol></div>";
+  } else if (stream === "waiting") {
+    h.textContent = "Thank you" + (name ? ", " + name : "") + ". We've kept your details.";
+    body.innerHTML =
+      '<p class="lead-copy">We don\'t have an installer covering ' + RF.esc(area ? "your postcode area (" + area + ")" : "your area") + ' yet. We won\'t pass your details to anyone until we do. If one starts covering your area, we\'ll contact you then, and you can say no.</p>' +
+      '<p class="lead-copy">If you\'d rather we deleted your details, tell us and we will. <span class="ph">[Contact route and retention period]</span></p>';
+  } else if (lead) {
+    h.textContent = "Thank you" + (name ? ", " + name : "") + ". We have your details.";
+    body.innerHTML =
+      '<div class="stack gap-16"><div><strong>What happens next</strong></div><ol class="next-list">' +
+      li(1, "We\'ll pass your details to one installer who covers your area. This can take a few days.") +
+      li(2, "They\'ll contact you by phone or text to talk about your stairs.") +
+      li(3, "You decide. There\'s no obligation.") + "</ol></div>";
+  } else {
+    h.textContent = "Thank you.";
+    body.innerHTML = '<p class="lead-copy">We\'ve got your enquiry. An installer who covers your area will be in touch.</p>';
+  }
+
+  /* Conversion tracking fires here, once per lead, with no personal data.
+     Wire Google Ads / Meta Pixel / GA4 to the 'generate_lead' event in a tag manager.
+     Cookie consent must gate any advertising tags before launch. */
+  window.dataLayer = window.dataLayer || [];
+  var fired = RF.session.get("fired", {});
+  if (lead && !fired[lead.id]) {
+    window.dataLayer.push({
+      event: "generate_lead",
+      lead_product: lead.product,
+      lead_tier: lead.scoring.tier,
+      lead_stream: lead.scoring.stream,
+      landing_variant: lead.variant
+    });
+    fired[lead.id] = true;
+    RF.session.set("fired", fired);
+  }
+
+  /* Prototype-only panel: shows how the lead was scored and routed */
+  if (C.prototypeBanner && lead) {
+    var t = lead.scoring.tests;
+    function mark(ok) { return ok ? "Pass" : "Fail"; }
+    var p = document.getElementById("proto");
+    p.hidden = false;
+    p.innerHTML =
+      "<h2>Prototype only: how this lead was scored</h2>" +
+      "<p>Tier <strong>" + RF.esc(lead.scoring.tier) + "</strong>, routed to <strong>" + RF.esc(RF.LABELS.stream[lead.scoring.stream]) + "</strong>.</p>" +
+      "<p class=\"muted\">Stairs: " + mark(t.stairs) + ". Area: " + mark(t.area) + ". Timing: " + mark(t.timing) + ". Evidence: " + mark(t.evidence) + ".</p>" +
+      "<p style=\"margin-top:10px\"><a href=\"../../demo/lead/?id=" + encodeURIComponent(lead.id) + "\">See the lead as the buyer would</a></p>";
+  }
+  h.focus({ preventScroll: true });
+})();
+</script>
+</body>
+</html>
