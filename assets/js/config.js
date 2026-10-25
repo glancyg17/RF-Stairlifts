@@ -37,7 +37,8 @@ window.RF_CONFIG = {
     },
     /* Found on the installer's own pages but NOT independently confirmed, so NOT used on the site yet.
        Ask them for proof or permission before using any of these:
-       - "Which? Trusted Trader Project of the Year Award 2025" (no Which? source found)
+       - "Which? Trusted Trader Project of the Year Award 2025": backed by a Which?-branded congratulations
+         graphic on the installer's own site, but no Which? page found. Ask the installer for the Which? email or page.
        - "all engineers are DBS-checked" and the Trustmark / Trading Standards badge
        - "rated 5 stars from 1,000+ reviews" (Which? shows 144; Trustpilot is a separate count)
        - Handicare Gold Dealer status (trade press, undated)
